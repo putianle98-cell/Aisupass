@@ -327,16 +327,17 @@ class AiModelQueryDatasource {
 
   /// 把用户填写的地址补全成对话地址，端点按协议区分。
   static String resolveChatUrl(String raw, AiApiType apiType) {
-    final String base = _normalizeBase(raw);
-    if (base.isEmpty) return '';
-    final String endpoint = switch (apiType) {
-      AiApiType.openai => '/chat/completions',
-      AiApiType.openaiResponses => '/responses',
-      AiApiType.anthropic => '/messages',
-    };
-    if (base.endsWith(endpoint)) return base;
-    if (base.endsWith('/v1')) return '$base$endpoint';
-    return '$base/v1$endpoint';
+  final String base = _normalizeBase(raw);
+  if (base.isEmpty) return '';
+  final String endpoint = switch (apiType) {
+    AiApiType.openai => '/chat/completions',
+    AiApiType.openaiResponses => '/responses',
+    AiApiType.anthropic => '/messages',
+  };
+  if (base.endsWith(endpoint)) return base;
+  if (base.endsWith('/v4')) return '$base$endpoint';
+  if (base.endsWith('/v1')) return '$base$endpoint';
+  return '$base/v1$endpoint';
   }
 
   /// 去掉末尾斜杠与已写死的对话端点，得到 base。
